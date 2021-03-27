@@ -1,0 +1,431 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Utility integration \n",
+    "version" : "1.0.0",
+    "title" : "Utility Integration",
+    "termsOfService" : "http://propertybutton.io/terms/",
+    "contact" : {
+      "email" : "apiteam@propertybutton.io"
+    },
+    "license" : {
+      "name" : "propertychannel 2.0",
+      "url" : "http://propertybutton.io"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/bhupesh-mukhija/utilities/1.0.0",
+  "tags" : [ {
+    "name" : "utility",
+    "description" : "Api to send utility data and get utility data"
+  } ],
+  "schemes" : [ "https", "http" ],
+  "paths" : {
+    "/utility" : {
+      "get" : {
+        "tags" : [ "utility" ],
+        "summary" : "on demand get utility status",
+        "description" : "Multiple salesforce ro id values can be provided with comma separated strings",
+        "operationId" : "get utility status by id",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "RO id's required to find the status",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/UtilityGetResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        },
+        "security" : [ {
+          "utility_auth" : [ "write:utility", "read:utility" ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "utility" ],
+        "summary" : "Send new utilities to respective provider",
+        "operationId" : "sendUtility",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Utility sales required to be sent to utility provider",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ApiRequest"
+          }
+        } ],
+        "responses" : {
+          "405" : {
+            "description" : "Invalid input"
+          },
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "utility_auth" : [ "write:utility", "read:utility" ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "utility" ],
+        "summary" : "WIP - SPECS IN PROGRESS",
+        "operationId" : "updateUtility",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "If unitility data required to be updated",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Customer"
+          }
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "utility not found"
+          },
+          "405" : {
+            "description" : "Validation exception"
+          }
+        },
+        "security" : [ {
+          "utility_auth" : [ "write:utility", "read:utility" ]
+        } ]
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "utility_auth" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "http://utility.propertybuttin.ie/authorize",
+      "flow" : "implicit",
+      "scopes" : {
+        "write:utility" : "send utility to provider",
+        "read:utility" : "get utility updates"
+      }
+    },
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "api_key",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "Address" : {
+      "type" : "object",
+      "properties" : {
+        "line1" : {
+          "type" : "string"
+        },
+        "line2" : {
+          "type" : "string"
+        },
+        "line3" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "postcode" : {
+          "type" : "string"
+        },
+        "countryCode" : {
+          "type" : "string",
+          "enum" : [ "IE", "GB" ]
+        },
+        "country" : {
+          "type" : "string",
+          "enum" : [ "Ireland", "United Kingdom" ]
+        }
+      },
+      "xml" : {
+        "name" : "Address"
+      }
+    },
+    "Property" : {
+      "type" : "object",
+      "properties" : {
+        "mprn" : {
+          "type" : "string"
+        },
+        "gprn" : {
+          "type" : "string"
+        },
+        "id" : {
+          "$ref" : "#/definitions/id"
+        },
+        "address" : {
+          "$ref" : "#/definitions/Address"
+        },
+        "meters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Meter"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Property"
+      }
+    },
+    "id" : {
+      "type" : "object",
+      "required" : [ "guid" ],
+      "properties" : {
+        "guid" : {
+          "type" : "string"
+        },
+        "externalid" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Customer" : {
+      "type" : "object",
+      "required" : [ "email", "firstName", "id", "lastName" ],
+      "properties" : {
+        "salutation" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "mobile" : {
+          "type" : "string"
+        },
+        "dob" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "id" : {
+          "$ref" : "#/definitions/id"
+        }
+      },
+      "xml" : {
+        "name" : "User"
+      }
+    },
+    "PaymentMethod" : {
+      "type" : "object",
+      "required" : [ "Payment Type", "iban" ],
+      "properties" : {
+        "Payment Type" : {
+          "type" : "string",
+          "enum" : [ "Direct Debit", "Cash/Cheque", "Prepaid" ]
+        },
+        "iban" : {
+          "type" : "string"
+        },
+        "date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "paymentDay" : {
+          "type" : "number"
+        },
+        "chequeNumber" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Tag"
+      }
+    },
+    "Meter" : {
+      "type" : "object",
+      "required" : [ "meternumber", "type" ],
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "Electricity", "Gas" ]
+        },
+        "subtype" : {
+          "type" : "string",
+          "enum" : [ "24Hrs", "DN-Day", "DN-Night", "NSW" ]
+        },
+        "meternumber" : {
+          "type" : "string"
+        },
+        "read" : {
+          "$ref" : "#/definitions/MeterReads"
+        }
+      },
+      "xml" : {
+        "name" : "Meter"
+      }
+    },
+    "MeterReads" : {
+      "type" : "object",
+      "required" : [ "readValue", "readdate" ],
+      "properties" : {
+        "readdate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "readValue" : {
+          "type" : "number"
+        }
+      },
+      "xml" : {
+        "name" : "read"
+      }
+    },
+    "MarketingDetails" : {
+      "type" : "object",
+      "properties" : {
+        "emailOptin" : {
+          "type" : "boolean",
+          "description" : "Marketing opt in over email"
+        },
+        "smsOptin" : {
+          "type" : "boolean",
+          "description" : "Marketing communcations via sms"
+        },
+        "phoneOptin" : {
+          "type" : "boolean",
+          "description" : "Marketing opt in for phone communication"
+        },
+        "mobileOptIn" : {
+          "type" : "boolean",
+          "description" : "Marketing opt in on moblie"
+        },
+        "postOptin" : {
+          "type" : "boolean",
+          "description" : "Marketing opt in via post"
+        },
+        "fieldSalesOptin" : {
+          "type" : "boolean",
+          "description" : "Marketing opt in on customer door"
+        },
+        "socialOptin" : {
+          "type" : "boolean",
+          "description" : "Marketing opt in for social media"
+        }
+      },
+      "xml" : {
+        "name" : "marketing-details"
+      }
+    },
+    "ApiRequest" : {
+      "type" : "object",
+      "properties" : {
+        "provider" : {
+          "type" : "string"
+        },
+        "utilityType" : {
+          "type" : "string",
+          "description" : "Identify type of request",
+          "enum" : [ "energy", "media", "waste" ]
+        },
+        "id" : {
+          "$ref" : "#/definitions/id"
+        },
+        "property" : {
+          "$ref" : "#/definitions/Property"
+        },
+        "customer" : {
+          "$ref" : "#/definitions/Customer"
+        },
+        "paymentdetails" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        },
+        "marketingprefs" : {
+          "$ref" : "#/definitions/MarketingDetails"
+        }
+      }
+    },
+    "UtilityResponse" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "$ref" : "#/definitions/id"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ApiResponse" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "description" : "Request outcome",
+          "enum" : [ "SUCCESS", "FAILED" ]
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Error code",
+          "enum" : [ 0, 1 ]
+        },
+        "message" : {
+          "type" : "string"
+        }
+      }
+    },
+    "UtilityGetResponse" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "description" : "Request outcome",
+          "enum" : [ "SUCCESS", "FAILED" ]
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Error code",
+          "enum" : [ 0, 1 ]
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "returnData" : {
+          "type" : "array",
+          "description" : "WIP - more to come",
+          "items" : {
+            "$ref" : "#/definitions/UtilityResponse"
+          }
+        }
+      }
+    }
+  }
+}

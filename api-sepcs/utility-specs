@@ -229,7 +229,10 @@
         },
         "dob" : {
           "type" : "string",
-          "format" : "date"
+          "format" : "dd/MM/yyyy"
+        },
+        "isSpecialService" : {
+          "type" : "boolean"
         },
         "id" : {
           "$ref" : "#/definitions/id"
@@ -357,6 +360,9 @@
         "startDate" : {
           "type" : "string",
           "description" : "Contaract begin date dd/MM/yyyy"
+        },
+        "billingAddress" : {
+          "$ref" : "#/definitions/Address"
         },
         "id" : {
           "$ref" : "#/definitions/id"

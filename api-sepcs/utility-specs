@@ -351,6 +351,13 @@
           "description" : "Identify type of request",
           "enum" : [ "energy", "media", "waste" ]
         },
+        "switchType" : {
+          "type" : "string"
+        },
+        "startDate" : {
+          "type" : "string",
+          "description" : "Contaract begin date dd/MM/yyyy"
+        },
         "id" : {
           "$ref" : "#/definitions/id"
         },

@@ -242,13 +242,39 @@
         "name" : "User"
       }
     },
+    "Product" : {
+      "type" : "object",
+      "properties" : {
+        "productType" : {
+          "type" : "string"
+        },
+        "productId" : {
+          "type" : "string"
+        },
+        "discountPercent" : {
+          "type" : "string"
+        },
+        "paperless" : {
+          "type" : "boolean"
+        },
+        "elecLifeSupport" : {
+          "type" : "boolean"
+        },
+        "smartConset" : {
+          "type" : "boolean"
+        }
+      }
+    },
     "PaymentMethod" : {
       "type" : "object",
-      "required" : [ "Payment Type", "iban" ],
+      "required" : [ "iban" ],
       "properties" : {
-        "Payment Type" : {
+        "paymentType" : {
           "type" : "string",
           "enum" : [ "Direct Debit", "Cash/Cheque", "Prepaid" ]
+        },
+        "accountHolder" : {
+          "type" : "string"
         },
         "iban" : {
           "type" : "string"

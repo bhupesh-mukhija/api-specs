@@ -248,11 +248,14 @@
         "productType" : {
           "type" : "string"
         },
+        "productSubType" : {
+          "type" : "string"
+        },
         "productId" : {
           "type" : "string"
         },
         "discountPercent" : {
-          "type" : "string"
+          "type" : "number"
         },
         "paperless" : {
           "type" : "boolean"
@@ -260,7 +263,7 @@
         "elecLifeSupport" : {
           "type" : "boolean"
         },
-        "smartConset" : {
+        "smartConsent" : {
           "type" : "boolean"
         }
       }
@@ -300,7 +303,7 @@
       "properties" : {
         "type" : {
           "type" : "string",
-          "enum" : [ "Electricity", "Gas" ]
+          "enum" : [ "electricity", "gas" ]
         },
         "subtype" : {
           "type" : "string",
@@ -326,7 +329,7 @@
           "format" : "date-time"
         },
         "readValue" : {
-          "type" : "number"
+          "type" : "string"
         }
       },
       "xml" : {
@@ -336,15 +339,15 @@
     "MarketingDetails" : {
       "type" : "object",
       "properties" : {
-        "emailOptin" : {
+        "emailOptIn" : {
           "type" : "boolean",
           "description" : "Marketing opt in over email"
         },
-        "smsOptin" : {
+        "smsOptIn" : {
           "type" : "boolean",
           "description" : "Marketing communcations via sms"
         },
-        "phoneOptin" : {
+        "phoneOptIn" : {
           "type" : "boolean",
           "description" : "Marketing opt in for phone communication"
         },
@@ -352,17 +355,23 @@
           "type" : "boolean",
           "description" : "Marketing opt in on moblie"
         },
-        "postOptin" : {
+        "postOptIn" : {
           "type" : "boolean",
           "description" : "Marketing opt in via post"
         },
-        "fieldSalesOptin" : {
+        "fieldSalesOptIn" : {
           "type" : "boolean",
           "description" : "Marketing opt in on customer door"
         },
-        "socialOptin" : {
+        "socialOptIn" : {
           "type" : "boolean",
           "description" : "Marketing opt in for social media"
+        },
+        "rewardOptIn" : {
+          "type" : "boolean"
+        },
+        "tpMarketingOptIn" : {
+          "type" : "boolean"
         }
       },
       "xml" : {
@@ -399,11 +408,17 @@
         "customer" : {
           "$ref" : "#/definitions/Customer"
         },
-        "paymentdetails" : {
+        "paymentDetails" : {
           "$ref" : "#/definitions/PaymentMethod"
         },
-        "marketingprefs" : {
+        "marketingPrefs" : {
           "$ref" : "#/definitions/MarketingDetails"
+        },
+        "products" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Product"
+          }
         }
       }
     },

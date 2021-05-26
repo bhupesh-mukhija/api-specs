@@ -21,39 +21,35 @@
   } ],
   "schemes" : [ "https", "http" ],
   "paths" : {
-    "/utility" : {
-      "get" : {
-        "tags" : [ "utility" ],
-        "summary" : "on demand get utility status",
-        "description" : "Multiple salesforce ro id values can be provided with comma separated strings",
-        "operationId" : "get utility status by id",
-        "produces" : [ "application/json", "application/xml" ],
+    "/utility/status" : {
+      "post" : {
+        "tags" : [ "status" ],
+        "summary" : "Get status from respective provider",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "status",
-          "in" : "query",
-          "description" : "RO id's required to find the status",
+          "in" : "body",
+          "name" : "body",
+          "description" : "Utility sales required to be sent to utility provider",
           "required" : true,
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          },
-          "collectionFormat" : "multi"
+          "schema" : {
+            "$ref" : "#/definitions/ApiStatusRequest"
+          }
         } ],
         "responses" : {
-          "200" : {
-            "description" : "successful operation",
-            "schema" : {
-              "$ref" : "#/definitions/UtilityGetResponse"
-            }
+          "405" : {
+            "description" : "Invalid input"
           },
-          "400" : {
-            "description" : "Invalid request"
+          "200" : {
+            "description" : "success",
+            "schema" : {
+              "$ref" : "#/definitions/ApiStatusResponse"
+            }
           }
-        },
-        "security" : [ {
-          "utility_auth" : [ "write:utility", "read:utility" ]
-        } ]
-      },
+        }
+      }
+    },
+    "/utility" : {
       "post" : {
         "tags" : [ "utility" ],
         "summary" : "Send new utilities to respective provider",
@@ -78,36 +74,6 @@
             "schema" : {
               "$ref" : "#/definitions/ApiResponse"
             }
-          }
-        },
-        "security" : [ {
-          "utility_auth" : [ "write:utility", "read:utility" ]
-        } ]
-      },
-      "patch" : {
-        "tags" : [ "utility" ],
-        "summary" : "WIP - SPECS IN PROGRESS",
-        "operationId" : "updateUtility",
-        "consumes" : [ "application/json", "application/xml" ],
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "If unitility data required to be updated",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/Customer"
-          }
-        } ],
-        "responses" : {
-          "400" : {
-            "description" : "Invalid ID supplied"
-          },
-          "404" : {
-            "description" : "utility not found"
-          },
-          "405" : {
-            "description" : "Validation exception"
           }
         },
         "security" : [ {
@@ -378,6 +344,25 @@
         "name" : "marketing-details"
       }
     },
+    "ApiStatusRequest" : {
+      "type" : "object",
+      "properties" : {
+        "request" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StatusRequest"
+          }
+        }
+      }
+    },
+    "ApiStatusResponse" : {
+      "type" : "object",
+      "properties" : {
+        "response" : {
+          "$ref" : "#/definitions/UtilityGetResponse"
+        }
+      }
+    },
     "ApiRequest" : {
       "type" : "object",
       "properties" : {
@@ -419,6 +404,17 @@
           "items" : {
             "$ref" : "#/definitions/Product"
           }
+        }
+      }
+    },
+    "StatusRequest" : {
+      "type" : "object",
+      "properties" : {
+        "provider" : {
+          "type" : "string"
+        },
+        "id" : {
+          "$ref" : "#/definitions/id"
         }
       }
     },
